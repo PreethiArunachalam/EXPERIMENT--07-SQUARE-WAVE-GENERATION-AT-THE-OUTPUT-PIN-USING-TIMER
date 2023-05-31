@@ -90,45 +90,129 @@ Step10. Double click on the the MCU part to open settings. Next to the Program F
 Step14. click on debug and simulate using simulation as shown below 
  ![image](https://github.com/vasanthkumarch/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/36288975/b8efbfc2-f0c5-4106-8117-3a6e7ac87f6c)
 
+## STM 32 CUBE PROGRAM :
+```
+#include "main.h"
+
+int main(void)
+{
+  
+  HAL_Init();
 
  
+  SystemClock_Config();
 
   
+  MX_GPIO_Init();
+  MX_TIM2_Init();
+  
+  HAL_TIM_Base_Start(&htim2);
+  HAL_TIM_PWM_Init(&htim2);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+  while (1)
+  {
+    
+  }
 
-## STM 32 CUBE PROGRAM :
+}
+
+static void MX_TIM2_Init(void)
+{
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+ 
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 47;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 1000;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 800;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+ 
+  HAL_TIM_MspPostInit(&htim2);
+
+}
 
 
+static void MX_GPIO_Init(void)
+{
 
 
+  __HAL_RCC_GPIOA_CLK_ENABLE();
 
+}
+
+#ifdef  USE_FULL_ASSERT
+
+void assert_failed(uint8_t *file, uint32_t line)
+{
+ 
+}
+```
 ## Output screen shots of proteus  :
  
- 
- ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
- 
+ ![image](https://github.com/PreethiArunachalam/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/120115840/dd23b1c4-c135-4b9c-9875-5a3655de8d4e)
 
+## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
 ## DUTY CYCLE AND FREQUENCY CALCULATION 
 FOR PULSE AT 500
 
-TON = 
-TOFF=
-TOTAL TIME = 
+![image](https://github.com/PreethiArunachalam/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/120115840/82c3e19a-4261-4c41-8f3d-e3c5a6a98bae)
+
+TON = 8
+TOFF= 8
+TOTAL TIME = 16
 FREQUENCY = 1/(TOTAL TIME)
+FREQUENCY = 62.5Hz
 
 FOR PULSE AT 700
 
-TON = 
-TOFF=
-TOTAL TIME = 
-FREQUENCY = 1/(TOTAL TIME)
+![image](https://github.com/PreethiArunachalam/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/120115840/f4e428b8-99fc-43d8-bdf0-bf250b3ca733)
 
+TON = 13
+TOFF= 3
+TOTAL TIME = 16
+FREQUENCY = 1/(TOTAL TIME)
+FREQUENCY = 62.5Hz
 
 FOR PULSE AT 900
 
-TON = 
-TOFF=
-TOTAL TIME = 
+![image](https://github.com/PreethiArunachalam/EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER/assets/120115840/33f25945-a25e-4dea-91cb-bccab37aa47d)
+
+TON = 14
+TOFF= 2
+TOTAL TIME = 16
 FREQUENCY = 1/(TOTAL TIME)
+FREQUENCY = 62.5Hz
 
 
 ## Result :
